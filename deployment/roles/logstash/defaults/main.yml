@@ -1,0 +1,9 @@
+---
+# ----------------------------------------------------------------------------
+# defaults file for logstash
+# ----------------------------------------------------------------------------
+logstash_enabled_on_boot: yes
+
+logstash_home: /opt/logstash
+logstash_conf_dir: /etc/logstash/conf.d
+logstash_output_dir: /var/log/logstash

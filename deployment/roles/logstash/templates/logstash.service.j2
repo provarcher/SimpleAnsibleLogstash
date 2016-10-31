@@ -1,0 +1,16 @@
+# ----------------------------------------------------------------------------
+# Unit File
+# ----------------------------------------------------------------------------
+[Unit]
+Description=Starts Logstash as a service
+
+[Service]
+ExecStart={{ logstash_home }}/start-logstash.sh
+WorkingDirectory={{ logstash_home }}
+LimitNOFILE=4096
+IgnoreSIGPIPE=false
+KillMode=process
+User={{ logstash_user }}
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,15 @@
+---
+# ----------------------------------------------------------------------------
+# ensure that the service_user user/group exist
+# ----------------------------------------------------------------------------
+
+- name: ensure service_user group exists
+  group: name={{ service_user }} state=present system=yes
+
+- name: ensure service_user user exists
+  user: name={{ service_user }} state=present system=yes
+        group={{ service_user }}
+        shell=/sbin/nologin
+        home={{ service_home }}
+        createhome=yes
+        comment='Service User'

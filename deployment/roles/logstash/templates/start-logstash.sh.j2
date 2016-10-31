@@ -1,0 +1,4 @@
+#!/bin/bash
+
+echo "starting logstash..."
+cd {{ logstash_home }}/logstash-2.4.0/ && bin/logstash -f {{ logstash_conf_dir }}/logstash.conf

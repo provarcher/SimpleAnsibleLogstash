@@ -1,0 +1,8 @@
+---
+- hosts: all
+  become: yes
+  include_vars: group_vars/services.yml
+  pre_tasks:
+    - include: roles/service_user/tasks/service_user.yml
+  roles:
+   - logstash

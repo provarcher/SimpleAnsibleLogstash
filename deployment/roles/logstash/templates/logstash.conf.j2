@@ -1,0 +1,17 @@
+input { 
+  {% if input_configs is defined %}
+  {{ input_configs }}
+  {% endif %}
+}
+
+filter {
+  {% if filter_configs is defined %}
+  {{ filter_configs }}
+  {% endif %}
+}
+
+output {
+  {% if output_configs is defined %}
+  {{ output_configs }}
+  {% endif %}
+}

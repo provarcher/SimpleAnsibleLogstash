@@ -1,0 +1,66 @@
+---
+# ----------------------------------------------------------------------------
+# tasks file for logstash
+# ----------------------------------------------------------------------------
+- name: Add Elasticsearch GPG key.
+  rpm_key:
+    key: http://packages.elasticsearch.org/GPG-KEY-elasticsearch
+    state: present
+
+- name: create directory for logstash
+  file:
+    path: "{{ logstash_home }}"
+    state: directory
+
+- name: create directory for logstash configuration
+  file:
+    path: "{{ logstash_conf_dir }}"
+    state: directory
+
+- name: create directory for logstash logs
+  file:
+    path: "{{ logstash_output_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0777
+
+- name: Extract archive
+  unarchive: 
+    src: https://download.elastic.co/logstash/logstash/logstash-2.4.0.tar.gz
+    copy: no
+    dest: "{{ logstash_home }}"
+
+# - name: deploy systemd unit file for logstash
+#   template: src=logstash.service.j2 dest=/etc/systemd/system/logstash.service
+#   register: logstash_systemd
+
+- name: deploy startup script for logstash
+  template: 
+    src: start-logstash.sh.j2 
+    dest: "{{ logstash_home }}/start-logstash.sh"
+    owner: "{{ logstash_user }}"
+    group: "{{ logstash_user }}" 
+    mode: 0755
+
+# - name: reload systemd on unit file changes
+#   command: systemctl daemon-reload
+#   when: logstash_systemd|changed
+
+- name: Create Logstash configuration file
+  template:
+    src: "logstash.conf.j2"
+    dest: "{{ logstash_conf_dir }}/logstash.conf"
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Get list of installed plugins.
+  command: "{{ logstash_home }}/logstash-2.4.0/bin/logstash-plugin list"
+  register: logstash_plugins_list
+  changed_when: false
+
+- name: Install configured plugins.
+  command: "{{ logstash_home }}/logstash-2.4.0/bin/logstash-plugin install {{ item }}"
+  with_items: "{{ logstash_install_plugins }}"
+  when: "item not in logstash_plugins_list.stdout"

@@ -1,0 +1,36 @@
+---
+- name: Create directory
+  file:
+    path: "{{ java_download_folder }}"
+    state: directory
+
+- name: Download Java
+  command: "wget -q -O {{ java_archive }} --no-check-certificate --no-cookies --header 'Cookie: oraclelicense=accept-securebackup-cookie' {{ java_download_url }} creates={{ java_archive }}"
+
+- name: Unpack archive
+  unarchive:
+    src: "{{ java_archive }}"
+    copy: no
+    dest: "{{ java_download_folder }}"
+
+- name: Fix ownership
+  file:
+    state: directory
+    path: "{{ java_name }}"
+    owner: root
+    group: root
+    recurse: yes
+
+- name: Make Java "{{ java_version_name }}" available for system
+  command: 'alternatives --install "/usr/bin/java" "java" "{{ java_name }}/bin/java" 2000'
+
+- name: Make Symlink
+  file:
+    path: "{{ java_download_folder }}/latest"
+    src: "{{ java_name }}"
+    state: link
+
+- name: Clean up
+  file:
+    state: absent
+    path: "{{ java_archive }}"

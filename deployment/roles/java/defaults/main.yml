@@ -1,0 +1,11 @@
+---
+# ----------------------------------------------------------------------------
+# defaults file for java
+# ----------------------------------------------------------------------------
+java_build_version: 8u5-b13
+java_release_version: jdk-8u5-linux-x64.tar.gz
+java_version_name: jdk1.8.0_05
+java_download_url: "http://download.oracle.com/otn-pub/java/jdk/{{ java_build_version }}/{{ java_release_version }}"
+java_download_folder: /opt/jdk
+java_name: "{{ java_download_folder }}/{{ java_version_name }}"
+java_archive: "{{ java_download_folder }}/{{ java_release_version }}"
